@@ -4,11 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import top.learningman.enter.AccessibilityUtil.isAccessibilitySettingsOn
 import top.learningman.enter.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,13 +31,33 @@ class MainActivity : AppCompatActivity() {
             intent.data = Uri.parse("package:$packageName")
             startActivity(intent)
         }
+
+        binding.accessibility.setOnClickListener {
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            Toast.makeText(this, "Please enable accessibility", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.show.setOnClickListener {
+            val intent = Intent(this, ButtonAccessibilityService::class.java)
+            intent.putExtra(ButtonAccessibilityService.TYPE_KEY, ButtonAccessibilityService.ADD_VIEW)
+            startService(intent)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (Settings.canDrawOverlays(this)) {
+        if (!Settings.canDrawOverlays(this)) {
+            binding.waitForPermission.visibility = View.VISIBLE
+            binding.waitForAccessibility.visibility = View.GONE
+            binding.waitForStartup.visibility = View.GONE
+        } else if (!isAccessibilitySettingsOn(this)) {
+            binding.waitForAccessibility.visibility = View.VISIBLE
             binding.waitForPermission.visibility = View.GONE
+            binding.waitForStartup.visibility = View.GONE
+        } else {
             binding.waitForStartup.visibility = View.VISIBLE
+            binding.waitForAccessibility.visibility = View.GONE
+            binding.waitForPermission.visibility = View.GONE
         }
     }
 
