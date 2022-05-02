@@ -39,7 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.show.setOnClickListener {
             val intent = Intent(this, ButtonAccessibilityService::class.java)
-            intent.putExtra(ButtonAccessibilityService.TYPE_KEY, ButtonAccessibilityService.ADD_VIEW)
+            intent.putExtra(
+                ButtonAccessibilityService.TYPE_KEY,
+                ButtonAccessibilityService.ADD_VIEW
+            )
             startService(intent)
         }
     }
