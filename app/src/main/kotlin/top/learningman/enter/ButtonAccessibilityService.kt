@@ -22,9 +22,9 @@ class ButtonAccessibilityService : AccessibilityService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // id:
-        // cn.com.langeasy.LangEasyLexis:id/et_spell_word (preview)
-        // cn.com.langeasy.LangEasyLexis:id/et_spell_input (final)
+//        id:
+//        cn.com.langeasy.LangEasyLexis:id/et_spell_word (preview)
+//        cn.com.langeasy.LangEasyLexis:id/et_spell_input (final)
 //        rootInActiveWindow?.let {
 //
 //        }?: Log.d("ButtonAccessibilityService", "rootInActiveWindow is null")
