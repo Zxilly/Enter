@@ -16,6 +16,10 @@ object ButtonWindowManager {
     private var mView: ButtonView? = null
     private var mWindowManager: WindowManager? = null
 
+    fun isShowing(): Boolean {
+        return mView != null
+    }
+
     fun addView(service: AccessibilityService) {
         if (mView != null) {
             return

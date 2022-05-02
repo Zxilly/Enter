@@ -33,3 +33,7 @@ fun Int.dip2px(context: Context): Int {
     val scale = context.resources.displayMetrics.density
     return (this * scale + 0.5f).toInt()
 }
+
+fun buttonAvailable(context: Context): Boolean {
+    return AccessibilityUtil.isAccessibilitySettingsOn(context) and Settings.canDrawOverlays(context)
+}
