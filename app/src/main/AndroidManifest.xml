@@ -15,21 +15,23 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.BackSpace"
         tools:targetApi="31">
+
         <service
-            android:name="top.learningman.enter.ButtonAccessibilityService"
+            android:name=".ButtonAccessibilityService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
+
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
         </service>
 
         <activity
-            android:name="top.learningman.enter.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.BackSpace.NoActionBar">
             <intent-filter>
