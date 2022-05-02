@@ -7,11 +7,6 @@ import java.util.*
 
 
 object AccessibilityUtil {
-    fun sendEnter(service: AccessibilityService) {
-        // get input text
-
-    }
-
     fun isAccessibilitySettingsOn(context: Context): Boolean {
         var accessibilityEnabled = 0
         try {
@@ -28,8 +23,13 @@ object AccessibilityUtil {
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
             )
             return services.lowercase(Locale.getDefault())
-                .contains(context.packageName.lowercase(Locale.ROOT))
+                .contains(context.packageName.lowercase(Locale.getDefault()))
         }
         return false
     }
+}
+
+fun Int.dip2px(context: Context): Int {
+    val scale = context.resources.displayMetrics.density
+    return (this * scale + 0.5f).toInt()
 }
