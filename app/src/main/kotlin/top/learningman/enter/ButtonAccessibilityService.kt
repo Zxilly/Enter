@@ -50,6 +50,10 @@ class ButtonAccessibilityService : AccessibilityService() {
             Toast.makeText(this, "Please grant overlay permission.", Toast.LENGTH_LONG).show()
         }
 
+        if (ButtonWindowManager.isShowing()) {
+            return
+        }
+
         ButtonWindowManager.addView(this)
 
         createNotificationChannel()
@@ -77,6 +81,10 @@ class ButtonAccessibilityService : AccessibilityService() {
     }
 
     private fun hideButton() {
+        if (!ButtonWindowManager.isShowing()) {
+            return
+        }
+
         ButtonWindowManager.removeView(this)
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
