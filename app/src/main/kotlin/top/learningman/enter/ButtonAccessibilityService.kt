@@ -33,15 +33,13 @@ class ButtonAccessibilityService : AccessibilityService() {
     }
 
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         val name = "ButtonAccessibilityService"
         val descriptionText = "ButtonAccessibilityService Notification"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
             description = descriptionText
         }
-        // Register the channel with the system
+
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
@@ -69,7 +67,7 @@ class ButtonAccessibilityService : AccessibilityService() {
             .setSmallIcon(R.drawable.ic_pen_24px)
             .setContentTitle("Enter")
             .setContentText("Enter is showing.")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .addAction(R.drawable.ic_pen_24px, "Hide", pIntent)
 
