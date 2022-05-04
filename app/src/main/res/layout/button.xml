@@ -4,9 +4,11 @@
     android:id="@+id/button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/material_dynamic_primary50"
     android:contentDescription="@string/enter"
     android:src="@drawable/ic_pen_24px"
+    android:foregroundGravity="center"
+    android:layout_gravity="center"
+    app:borderWidth="0dp"
     app:fabSize="mini"
     app:rippleColor="@android:color/transparent"
-    app:useCompatPadding="true"/>
+    app:useCompatPadding="true" />
