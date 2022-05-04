@@ -7,7 +7,6 @@
     android:backgroundTint="@color/material_dynamic_primary50"
     android:contentDescription="@string/enter"
     android:src="@drawable/ic_pen_24px"
-    app:elevation="0dp"
     app:fabSize="mini"
     app:rippleColor="@android:color/transparent"
     app:useCompatPadding="true"/>

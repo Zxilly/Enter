@@ -1,9 +1,7 @@
 package top.learningman.enter
 
-import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.view.WindowManager
@@ -35,6 +33,9 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
     private var mCurrentMode = MODE_NONE
 
+    private val mStatusBarHeight = getStatusBarHeight();
+    private val mOffsetToParent = 32.dip2px(context) // TODO: keep position in view
+    private val mOffsetToParentY = mStatusBarHeight + mOffsetToParent;
 
     init {
         setOnTouchListener { _, event ->
@@ -42,24 +43,18 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
                 MotionEvent.ACTION_DOWN -> {
                     mIsTouching = true
                     mLastDownTime = System.currentTimeMillis()
-                    mLastDownX = event.rawX
-                    mLastDownY = event.rawY
+                    mLastDownX = event.x
+                    mLastDownY = event.y
                 }
                 MotionEvent.ACTION_MOVE -> {
                     if (isTouchSlop(event)) {
                         return@setOnTouchListener true
                     }
-                    val nowX = event.rawX
-                    val nowY = event.rawY
-                    val movedX = nowX - mLastDownX
-                    val movedY = nowY - mLastDownY
                     // Log.d("ButtonView", "movedX: $movedX, movedY: $movedY")
                     mLayoutParams.apply {
-                        x += movedX.toInt()
-                        y += movedY.toInt()
+                        x = (event.rawX - mOffsetToParent).toInt()
+                        y = (event.rawY - mOffsetToParentY).toInt()
                     }
-                    mLastDownX = nowX
-                    mLastDownY = nowY
                     mWindowManager.updateViewLayout(this@ButtonView, mLayoutParams)
                     mCurrentMode = MODE_MOVE
 
@@ -82,7 +77,7 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         return abs(x - mLastDownX) < mTouchSlop && abs(y - mLastDownY) < mTouchSlop
     }
 
-    fun setLayoutParams(layoutParams: WindowManager.LayoutParams) {
+    fun setWindowLayoutParams(layoutParams: WindowManager.LayoutParams) {
         mLayoutParams = layoutParams
     }
 
@@ -91,5 +86,14 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         val offsetY = abs(event.rawY - mLastDownY)
         val time = System.currentTimeMillis() - mLastDownTime
         return offsetX < mTouchSlop * 2 && offsetY < mTouchSlop * 2 && time < CLICK_LIMIT
+    }
+
+    private fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 }

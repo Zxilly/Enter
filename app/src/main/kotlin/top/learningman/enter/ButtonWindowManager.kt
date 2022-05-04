@@ -59,7 +59,7 @@ object ButtonWindowManager {
             flags =
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         }
-        mView!!.setLayoutParams(lp)
+        mView!!.setWindowLayoutParams(lp)
         wm.addView(mView, lp)
     }
 
