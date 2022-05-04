@@ -105,13 +105,4 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         val time = System.currentTimeMillis() - mLastDownTime
         return offsetX < mTouchSlop * 2 && offsetY < mTouchSlop * 2 && time < CLICK_LIMIT
     }
-
-    private fun getStatusBarHeight(): Int {
-        var result = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
-        return result
-    }
 }

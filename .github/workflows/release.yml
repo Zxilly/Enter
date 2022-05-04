@@ -5,16 +5,7 @@ on:
     branches: [ master ]
 
 permissions:
-  actions: write
-  checks: write
   contents: write
-  deployments: write
-  issues: write
-  packages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
 
 jobs:
   build:
@@ -23,15 +14,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adopt'
+          distribution: microsoft
           cache: gradle
 
-      - name: set up dependencies
-        run: |
-          sudo apt install libwayland-server0
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 

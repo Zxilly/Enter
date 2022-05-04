@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction
+import android.widget.Toast
 import top.learningman.enter.databinding.ButtonBinding
 
 
@@ -37,8 +38,13 @@ object ButtonWindowManager {
                 service.rootInActiveWindow?.let { rootWindow ->
                     rootWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
                         ?.let {
-                            it.performAction(AccessibilityAction.ACTION_IME_ENTER.id)
-                            Log.d("ButtonWindowManager", "apply enter")
+                            if (!it.text.isNullOrBlank()){
+                                it.performAction(AccessibilityAction.ACTION_IME_ENTER.id)
+                                Log.d("ButtonWindowManager", "apply enter")
+                            } else {
+                                Toast.makeText(service, "empty input", Toast.LENGTH_SHORT).show()
+                                Log.d("ButtonWindowManager", "empty input")
+                            }
                         }
                         ?: Log.d(
                             "ButtonWindowManager",
