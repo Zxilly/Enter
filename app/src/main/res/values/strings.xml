@@ -4,8 +4,8 @@
     <string name="permission_tip">This app requires alert window permission to be granted.</string>
     <string name="grant">Grant</string>
     <string name="startup_tip">You can show enter button now.</string>
-    <string name="show">Show</string>
     <string name="accessibility_service_description">Execute Enter with accessibility service.</string>
     <string name="enter">Enter</string>
     <string name="enable_accessibility_tip">Please enable accessibility for this app.</string>
+    <string name="toggle">Toggle</string>
 </resources>

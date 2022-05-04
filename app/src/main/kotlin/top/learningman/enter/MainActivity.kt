@@ -37,11 +37,15 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enable accessibility", Toast.LENGTH_SHORT).show()
         }
 
-        binding.show.setOnClickListener {
+        binding.toggle.setOnClickListener {
             val intent = Intent(this, ButtonAccessibilityService::class.java)
             intent.putExtra(
                 ButtonAccessibilityService.TYPE_KEY,
-                ButtonAccessibilityService.ADD_VIEW
+                if (ButtonWindowManager.isShowing()) {
+                    ButtonAccessibilityService.REMOVE_VIEW
+                } else {
+                    ButtonAccessibilityService.ADD_VIEW
+                }
             )
             startService(intent)
         }
