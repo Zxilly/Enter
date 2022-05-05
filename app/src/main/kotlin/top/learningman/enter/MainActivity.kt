@@ -9,6 +9,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import top.learningman.enter.AccessibilityUtil.isAccessibilitySettingsOn
 import top.learningman.enter.databinding.ActivityMainBinding
 
@@ -19,6 +22,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AppCenter.start(
+            application, "bdb6695f-b9af-49dd-ae56-2a2bdd4232c8",
+            Analytics::class.java, Crashes::class.java
+        )
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
