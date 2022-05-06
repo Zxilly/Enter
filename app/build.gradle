@@ -10,8 +10,8 @@ android {
         applicationId "top.learningman.enter"
         minSdk 30
         targetSdk 31
-        versionCode 2
-        versionName "1.0"
+        versionCode 4
+        versionName "1.1"
 
     }
 
