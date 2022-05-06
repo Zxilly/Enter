@@ -94,24 +94,24 @@ class MainActivity : AppCompatActivity() {
                                             "SPen Checked. Advanced feature enabled.",
                                             Toast.LENGTH_LONG
                                         ).show()
-                                        val button: SpenUnit = manager.getUnit(SpenUnit.TYPE_BUTTON)
-                                        manager.registerSpenEventListener({ event ->
-                                            val buttonEvent = ButtonEvent(event)
-                                            when (buttonEvent.action) {
-                                                ButtonEvent.ACTION_UP -> {
-                                                    startService(
-                                                        Intent(
-                                                            this@MainActivity,
-                                                            ButtonAccessibilityService::class.java
-                                                        ).apply {
-                                                            putExtra(
-                                                                ButtonAccessibilityService.TYPE_KEY,
-                                                                ButtonAccessibilityService.PRESS_ENTER
-                                                            )
-                                                        })
+                                        manager.registerSpenEventListener(
+                                            { event ->
+                                                when (ButtonEvent(event).action) {
+                                                    ButtonEvent.ACTION_UP -> {
+                                                        startService(
+                                                            Intent(
+                                                                this@MainActivity,
+                                                                ButtonAccessibilityService::class.java
+                                                            ).apply {
+                                                                putExtra(
+                                                                    ButtonAccessibilityService.TYPE_KEY,
+                                                                    ButtonAccessibilityService.PRESS_ENTER
+                                                                )
+                                                            })
+                                                    }
                                                 }
-                                            }
-                                        }, button)
+                                            }, manager.getUnit(SpenUnit.TYPE_BUTTON)
+                                        )
                                     }
 
                                     override fun onFailure(code: Int) {
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                Crashes.trackError(e);
+                Crashes.trackError(e)
             }
 
         }
