@@ -22,7 +22,6 @@ class ButtonAccessibilityService : AccessibilityService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         val type = intent?.extras?.getInt(TYPE_KEY)
         if (type != null) {
             when (type) {

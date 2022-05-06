@@ -75,6 +75,40 @@ class MainActivity : AppCompatActivity() {
             binding.waitForStartup.visibility = View.VISIBLE
             binding.waitForAccessibility.visibility = View.GONE
             binding.waitForPermission.visibility = View.GONE
+
+//            with(SpenRemote.getInstance()){
+//                if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
+//                    if (!isConnected) {
+//                        connect(this@MainActivity, object : SpenRemote.ConnectionResultCallback {
+//                            override fun onSuccess(manager: SpenUnitManager) {
+//                                val button: SpenUnit = manager.getUnit(SpenUnit.TYPE_BUTTON)
+//                                manager.registerSpenEventListener({ event ->
+//                                    val buttonEvent = ButtonEvent(event)
+//                                    when (buttonEvent.action) {
+//                                        ButtonEvent.ACTION_UP -> {
+//                                            binding.toggle.callOnClick()
+//                                            Log.d("Button", "Button up")
+//                                            Analytics.trackEvent(
+//                                                "SPen Event",
+//                                                mapOf("action" to "up")
+//                                            )
+//                                        }
+//                                    }
+//                                }, button)
+//                            }
+//
+//                            override fun onFailure(code: Int) {
+//                                Toast.makeText(
+//                                    this@MainActivity,
+//                                    "Failed to connect to S Pen.",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//                            }
+//                        })
+//                    }
+//                }
+//            }
+
         }
     }
 
