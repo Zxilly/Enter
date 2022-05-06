@@ -150,4 +150,13 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        with(SpenRemote.getInstance()) {
+            if (isConnected) {
+                disconnect(this@MainActivity)
+            }
+        }
+    }
 }
