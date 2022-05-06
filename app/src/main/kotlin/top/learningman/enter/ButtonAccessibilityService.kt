@@ -33,6 +33,9 @@ class ButtonAccessibilityService : AccessibilityService() {
                     Analytics.trackEvent("Hide Button")
                     hideButton()
                 }
+                PRESS_ENTER -> {
+                    clickEnter()
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -100,6 +103,7 @@ class ButtonAccessibilityService : AccessibilityService() {
     companion object {
         const val ADD_VIEW = 0
         const val REMOVE_VIEW = 1
+        const val PRESS_ENTER = 2
 
         const val TYPE_KEY = "type"
 

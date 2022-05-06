@@ -35,22 +35,7 @@ object ButtonWindowManager {
         val layoutInflater = LayoutInflater.from(service)
         mView = ButtonBinding.inflate(layoutInflater, null, false).apply {
             button.setOnClickListener {
-                service.rootInActiveWindow?.let { rootWindow ->
-                    rootWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-                        ?.let {
-                            if (!it.text.isNullOrBlank()){
-                                it.performAction(AccessibilityAction.ACTION_IME_ENTER.id)
-                                Log.d("ButtonWindowManager", "apply enter")
-                            } else {
-                                Toast.makeText(service, "empty input", Toast.LENGTH_SHORT).show()
-                                Log.d("ButtonWindowManager", "empty input")
-                            }
-                        }
-                        ?: Log.d(
-                            "ButtonWindowManager",
-                            "Not found should focus input"
-                        )
-                } ?: Log.d("ButtonWindowManager", "rootInActiveWindow is null")
+                service.clickEnter()
             }
         }.root
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +14,10 @@ import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.distribute.Distribute
+import com.samsung.android.sdk.penremote.ButtonEvent
+import com.samsung.android.sdk.penremote.SpenRemote
+import com.samsung.android.sdk.penremote.SpenUnit
+import com.samsung.android.sdk.penremote.SpenUnitManager
 import top.learningman.enter.AccessibilityUtil.isAccessibilitySettingsOn
 import top.learningman.enter.databinding.ActivityMainBinding
 
@@ -76,38 +81,60 @@ class MainActivity : AppCompatActivity() {
             binding.waitForAccessibility.visibility = View.GONE
             binding.waitForPermission.visibility = View.GONE
 
-//            with(SpenRemote.getInstance()){
-//                if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-//                    if (!isConnected) {
-//                        connect(this@MainActivity, object : SpenRemote.ConnectionResultCallback {
-//                            override fun onSuccess(manager: SpenUnitManager) {
-//                                val button: SpenUnit = manager.getUnit(SpenUnit.TYPE_BUTTON)
-//                                manager.registerSpenEventListener({ event ->
-//                                    val buttonEvent = ButtonEvent(event)
-//                                    when (buttonEvent.action) {
-//                                        ButtonEvent.ACTION_UP -> {
-//                                            binding.toggle.callOnClick()
-//                                            Log.d("Button", "Button up")
-//                                            Analytics.trackEvent(
-//                                                "SPen Event",
-//                                                mapOf("action" to "up")
-//                                            )
-//                                        }
-//                                    }
-//                                }, button)
-//                            }
-//
-//                            override fun onFailure(code: Int) {
-//                                Toast.makeText(
-//                                    this@MainActivity,
-//                                    "Failed to connect to S Pen.",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            }
-//                        })
-//                    }
-//                }
-//            }
+            try {
+                with(SpenRemote.getInstance()) {
+                    if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
+                        if (!isConnected) {
+                            connect(
+                                this@MainActivity,
+                                object : SpenRemote.ConnectionResultCallback {
+                                    override fun onSuccess(manager: SpenUnitManager) {
+                                        Toast.makeText(
+                                            this@MainActivity,
+                                            "SPen Checked. Advanced feature enabled.",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        val button: SpenUnit = manager.getUnit(SpenUnit.TYPE_BUTTON)
+                                        manager.registerSpenEventListener({ event ->
+                                            val buttonEvent = ButtonEvent(event)
+                                            when (buttonEvent.action) {
+                                                ButtonEvent.ACTION_UP -> {
+                                                    startService(
+                                                        Intent(
+                                                            this@MainActivity,
+                                                            ButtonAccessibilityService::class.java
+                                                        ).apply {
+                                                            putExtra(
+                                                                ButtonAccessibilityService.TYPE_KEY,
+                                                                ButtonAccessibilityService.PRESS_ENTER
+                                                            )
+                                                        })
+                                                }
+                                            }
+                                        }, button)
+                                    }
+
+                                    override fun onFailure(code: Int) {
+                                        Toast.makeText(
+                                            this@MainActivity,
+                                            "Failed to connect to S Pen.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                })
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                if (e is SecurityException) {
+                    Toast.makeText(
+                        this,
+                        "Failed to connect to S Pen. System error.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                Crashes.trackError(e);
+            }
 
         }
     }
