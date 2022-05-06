@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.microsoft.appcenter.analytics.Analytics
 
 
 class ButtonAccessibilityService : AccessibilityService() {
@@ -25,8 +26,14 @@ class ButtonAccessibilityService : AccessibilityService() {
         val type = intent?.extras?.getInt(TYPE_KEY)
         if (type != null) {
             when (type) {
-                ADD_VIEW -> showButton()
-                REMOVE_VIEW -> hideButton()
+                ADD_VIEW -> {
+                    Analytics.trackEvent("Show Button")
+                    showButton()
+                }
+                REMOVE_VIEW -> {
+                    Analytics.trackEvent("Hide Button")
+                    hideButton()
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)

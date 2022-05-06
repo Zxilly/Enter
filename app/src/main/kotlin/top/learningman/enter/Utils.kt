@@ -1,6 +1,5 @@
 package top.learningman.enter
 
-import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.provider.Settings
 import java.util.*
