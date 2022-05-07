@@ -3,13 +3,9 @@ package top.learningman.enter
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.graphics.PixelFormat
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
-import android.view.accessibility.AccessibilityNodeInfo
-import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction
-import android.widget.Toast
 import top.learningman.enter.databinding.ButtonBinding
 
 
@@ -33,11 +29,6 @@ object ButtonWindowManager {
 
         service.setTheme(R.style.Theme_BackSpace)
         val layoutInflater = LayoutInflater.from(service)
-        mView = ButtonBinding.inflate(layoutInflater, null, false).apply {
-            button.setOnClickListener {
-                service.clickEnter()
-            }
-        }.root
 
         val lp = WindowManager.LayoutParams().apply {
             type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
@@ -50,7 +41,13 @@ object ButtonWindowManager {
             flags =
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         }
-        mView!!.setWindowLayoutParams(lp)
+        mView = ButtonBinding.inflate(layoutInflater, null, false).apply {
+            button.setOnClickListener {
+                service.clickEnter()
+            }
+        }.root.apply {
+            setWindowLayoutParams(lp)
+        }
         wm.addView(mView, lp)
     }
 
