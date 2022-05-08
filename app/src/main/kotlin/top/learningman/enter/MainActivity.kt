@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             application, "bdb6695f-b9af-49dd-ae56-2a2bdd4232c8",
             Analytics::class.java, Crashes::class.java, Distribute::class.java
         )
-        Distribute.setEnabledForDebuggableBuild(true)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -86,7 +85,8 @@ class MainActivity : AppCompatActivity() {
                         if (!isConnected) {
                             connect(
                                 this@MainActivity,
-                                object : SpenRemote.ConnectionResultCallback {
+                                object :
+                                    SpenRemote.ConnectionResultCallback {
                                     override fun onSuccess(manager: SpenUnitManager) {
                                         Toast.makeText(
                                             this@MainActivity,
@@ -96,17 +96,11 @@ class MainActivity : AppCompatActivity() {
                                         manager.registerSpenEventListener(
                                             { event ->
                                                 when (ButtonEvent(event).action) {
+                                                    ButtonEvent.ACTION_DOWN -> {
+                                                        mClickController.actionDown()
+                                                    }
                                                     ButtonEvent.ACTION_UP -> {
-                                                        startService(
-                                                            Intent(
-                                                                this@MainActivity,
-                                                                ButtonAccessibilityService::class.java
-                                                            ).apply {
-                                                                putExtra(
-                                                                    ButtonAccessibilityService.TYPE_KEY,
-                                                                    ButtonAccessibilityService.PRESS_ENTER
-                                                                )
-                                                            })
+                                                        mClickController.actionUp()
                                                     }
                                                 }
                                             }, manager.getUnit(SpenUnit.TYPE_BUTTON)
@@ -155,6 +149,32 @@ class MainActivity : AppCompatActivity() {
         with(SpenRemote.getInstance()) {
             if (isConnected) {
                 disconnect(this@MainActivity)
+            }
+        }
+    }
+
+    private val mClickController = object {
+        private var mLastDown = 0L
+
+        fun actionDown() {
+            mLastDown = System.currentTimeMillis()
+        }
+
+        fun actionUp() {
+            val duration = System.currentTimeMillis() - mLastDown
+            Log.d("MainActivity", "Clicked for $duration ms")
+            if (duration < 300) {
+                Log.d("MainActivity", "Pen Clicked")
+                ButtonAccessibilityService.triggerAction(
+                    this@MainActivity,
+                    ButtonAccessibilityService.PRESS_ENTER
+                )
+            } else {
+                Log.d("MainActivity", "Pen Long Clicked")
+                ButtonAccessibilityService.triggerAction(
+                    this@MainActivity,
+                    ButtonAccessibilityService.PRESS_VOICE
+                )
             }
         }
     }

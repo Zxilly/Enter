@@ -3,9 +3,13 @@ package top.learningman.enter
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.graphics.PixelFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityNodeInfo
+import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction
+import android.widget.Toast
 import top.learningman.enter.databinding.ButtonBinding
 
 
@@ -44,6 +48,10 @@ object ButtonWindowManager {
         mView = ButtonBinding.inflate(layoutInflater, null, false).apply {
             button.setOnClickListener {
                 service.clickEnter()
+            }
+            button.setOnLongClickListener {
+                service.clickVoice()
+                true
             }
         }.root.apply {
             setWindowLayoutParams(lp)

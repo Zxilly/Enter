@@ -36,6 +36,9 @@ class ButtonAccessibilityService : AccessibilityService() {
                 PRESS_ENTER -> {
                     clickEnter()
                 }
+                PRESS_VOICE -> {
+                    clickVoice()
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -104,9 +107,17 @@ class ButtonAccessibilityService : AccessibilityService() {
         const val ADD_VIEW = 0
         const val REMOVE_VIEW = 1
         const val PRESS_ENTER = 2
+        const val PRESS_VOICE = 3
 
         const val TYPE_KEY = "type"
 
         const val CHANNEL_ID = "ButtonAccessibilityService"
+
+        fun triggerAction(context: Context, type: Int) {
+            val intent = Intent(context, ButtonAccessibilityService::class.java).apply {
+                putExtra(TYPE_KEY, type)
+            }
+            context.startService(intent)
+        }
     }
 }

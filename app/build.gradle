@@ -10,8 +10,8 @@ android {
         applicationId "top.learningman.enter"
         minSdk 30
         targetSdk 31
-        versionCode 4
-        versionName "1.2"
+        versionCode 5
+        versionName "1.3"
 
     }
 
@@ -64,7 +64,7 @@ dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
 
     def appCenterSdkVersion = '4.4.3'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
