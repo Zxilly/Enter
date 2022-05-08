@@ -30,10 +30,6 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     private var mIsTouching = false
 
     private val mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
-    private val CLICK_LIMIT: Long = 200
-
-    private val MODE_NONE = 0x000
-    private val MODE_MOVE = 0x005
 
     private var mCurrentMode = MODE_NONE
 
@@ -104,5 +100,11 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         val offsetY = abs(event.rawY - mLastRawY)
         val time = System.currentTimeMillis() - mLastDownTime
         return offsetX < mTouchSlop * 2 && offsetY < mTouchSlop * 2 && time < CLICK_LIMIT
+    }
+
+    companion object {
+        private const val CLICK_LIMIT: Long = 200
+        private const val MODE_NONE = 0x000
+        private const val MODE_MOVE = 0x001
     }
 }

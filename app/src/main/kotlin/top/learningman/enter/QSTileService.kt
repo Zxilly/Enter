@@ -1,7 +1,6 @@
 package top.learningman.enter
 
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.widget.Toast
