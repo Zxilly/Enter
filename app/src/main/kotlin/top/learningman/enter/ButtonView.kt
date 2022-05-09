@@ -31,7 +31,7 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
     private val mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
 
-    private var mCurrentMode = MODE_NONE
+    private var mCurrentMode = Mode.NONE
 
     private var mWidth: Int? = null
     private var mHeight: Int? = null
@@ -61,18 +61,22 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
                         y = (event.rawY - mLastRawY + mLastY).toInt()
                     }
                     mWindowManager.updateViewLayout(this@ButtonView, mLayoutParams)
-                    mCurrentMode = MODE_MOVE
+                    mCurrentMode = Mode.MOVE
                 }
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                     mIsTouching = false
-                    if (isClick(event)) {
+                    val offsetX = abs(event.rawX - mLastRawX)
+                    val offsetY = abs(event.rawY - mLastRawY)
+                    if (isClick(offsetX, offsetY)) {
                         performClick()
+                    } else if (isLongClick(offsetX, offsetY)) {
+                        performLongClick()
                     }
                     mLayoutParams = mLayoutParams.apply {
                         x = (event.rawX - mLastRawX + mLastX).toInt()
                         y = (event.rawY - mLastRawY + mLastY).toInt()
                     }
-                    mCurrentMode = MODE_NONE
+                    mCurrentMode = Mode.NONE
                 }
             }
             return@setOnTouchListener true
@@ -95,16 +99,23 @@ class ButtonView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         mLayoutParams = layoutParams
     }
 
-    private fun isClick(event: MotionEvent): Boolean {
-        val offsetX = abs(event.rawX - mLastRawX)
-        val offsetY = abs(event.rawY - mLastRawY)
+    private fun isClick(offsetX: Float, offsetY: Float): Boolean {
         val time = System.currentTimeMillis() - mLastDownTime
-        return offsetX < mTouchSlop * 2 && offsetY < mTouchSlop * 2 && time < CLICK_LIMIT
+        return isSmallMove(offsetX, offsetY) && time < Config.CLICK_LIMIT
+    }
+
+    private fun isLongClick(offsetX: Float, offsetY: Float): Boolean {
+        return isSmallMove(offsetX, offsetY)
+    }
+
+    private fun isSmallMove(x: Float, y: Float): Boolean {
+        return x < mTouchSlop * 2 && y < mTouchSlop * 2
     }
 
     companion object {
-        private const val CLICK_LIMIT: Long = 200
-        private const val MODE_NONE = 0x000
-        private const val MODE_MOVE = 0x001
+        enum class Mode {
+            NONE,
+            MOVE
+        }
     }
 }

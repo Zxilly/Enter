@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         fun actionUp() {
             val duration = System.currentTimeMillis() - mLastDown
             Log.d("MainActivity", "Clicked for $duration ms")
-            if (duration < 300) {
+            if (duration < Config.CLICK_LIMIT) {
                 Log.d("MainActivity", "Pen Clicked")
                 ButtonAccessibilityService.triggerAction(
                     this@MainActivity,
