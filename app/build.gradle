@@ -3,14 +3,16 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def currentVersionCode = (new Date()).getTime() / 1000
+
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "top.learningman.enter"
         minSdk 30
-        targetSdk 31
-        versionCode 6
+        targetSdk 32
+        versionCode = currentVersionCode
         versionName "1.4"
 
     }

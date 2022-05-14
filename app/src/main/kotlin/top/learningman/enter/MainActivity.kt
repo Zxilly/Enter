@@ -80,20 +80,20 @@ class MainActivity : AppCompatActivity() {
             binding.waitForAccessibility.visibility = View.GONE
             binding.waitForPermission.visibility = View.GONE
 
-            try {
-                with(SpenRemote.getInstance()) {
-                    if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-                        if (!isConnected) {
-                            connect(
-                                this@MainActivity,
-                                object :
-                                    SpenRemote.ConnectionResultCallback {
-                                    override fun onSuccess(manager: SpenUnitManager) {
-                                        Toast.makeText(
-                                            this@MainActivity,
-                                            "SPen Checked. Advanced feature enabled.",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+            with(SpenRemote.getInstance()) {
+                if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
+                    if (!isConnected) {
+                        connect(
+                            this@MainActivity,
+                            object :
+                                SpenRemote.ConnectionResultCallback {
+                                override fun onSuccess(manager: SpenUnitManager) {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "SPen Checked. Advanced feature enabled.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    try {
                                         manager.registerSpenEventListener(
                                             { event ->
                                                 when (ButtonEvent(event).action) {
@@ -106,29 +106,35 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }, manager.getUnit(SpenUnit.TYPE_BUTTON)
                                         )
+                                    } catch (e: Exception) {
+                                        if (e is SecurityException) {
+                                            Toast.makeText(
+                                                this@MainActivity,
+                                                "Failed to connect to S Pen. System error.",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                        Crashes.trackError(e)
+                                        Log.e(
+                                            "SPen",
+                                            "Failed to connect to S Pen. System error.",
+                                            e
+                                        )
                                     }
+                                }
 
-                                    override fun onFailure(code: Int) {
-                                        Toast.makeText(
-                                            this@MainActivity,
-                                            "Failed to connect to S Pen.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                })
-                        }
+                                override fun onFailure(code: Int) {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "Failed to connect to S Pen.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            })
                     }
                 }
-            } catch (e: Exception) {
-                if (e is SecurityException) {
-                    Toast.makeText(
-                        this,
-                        "Failed to connect to S Pen. System error.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                Crashes.trackError(e)
             }
+
 
         }
     }
