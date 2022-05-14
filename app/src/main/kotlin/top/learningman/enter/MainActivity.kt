@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                                             "Failed to connect to S Pen. System error.",
                                             e
                                         )
+                                        showErrorNotification(this@MainActivity, e)
                                     }
                                 }
 
