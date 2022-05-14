@@ -78,7 +78,7 @@ fun AccessibilityService.clickVoice() {
     } ?: Log.d("AccessibilityService", "rootInActiveWindow is null")
 }
 
-fun buttonAvailable(context: Context): Boolean {
+fun isButtonAvailable(context: Context): Boolean {
     return AccessibilityUtil.isAccessibilitySettingsOn(context) and Settings.canDrawOverlays(context)
 }
 
