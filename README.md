@@ -1,6 +1,6 @@
 # Enter
 
-[![Build status](https://build.appcenter.ms/v0.1/apps/37f873aa-894d-46de-a30d-a803e25bd52c/branches/master/badge)](https://appcenter.ms)
+[![Pre Release](https://github.com/Zxilly/Enter/actions/workflows/release.yml/badge.svg)](https://github.com/Zxilly/Enter/actions/workflows/release.yml)
 
 A floating enter button. Use accessibility to implement.
 
