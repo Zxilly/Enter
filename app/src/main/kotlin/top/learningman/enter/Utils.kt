@@ -63,6 +63,7 @@ fun AccessibilityService.shortClick() {
                     if (group.childCount >= 1) {
                         val first = group.getChild(0)
                         first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                        first.recycle()
                         Log.d("AccessibilityService", "click first in group")
                     } else {
                         Log.w("AccessibilityService", "empty group")
@@ -78,6 +79,7 @@ fun AccessibilityService.shortClick() {
                         if (next.childCount >= 1) {
                             val first = next.getChild(0)
                             first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                            first.recycle()
                             Log.d("AccessibilityService", "click next")
                         } else {
                             Log.w("AccessibilityService", "empty next")
