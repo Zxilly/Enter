@@ -41,7 +41,7 @@ fun AccessibilityService.shortClick() {
         rootWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
             ?.let {
                 if (!it.text.isNullOrBlank()) {
-                    it.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_IME_ENTER.id)
+                    it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                     Log.d("AccessibilityService", "apply enter")
                 } else {
                     Toast.makeText(this, "empty input", Toast.LENGTH_SHORT).show()
@@ -62,7 +62,7 @@ fun AccessibilityService.shortClick() {
                     val group = nodes[0]
                     if (group.childCount >= 1) {
                         val first = group.getChild(0)
-                        first.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id)
+                        first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                         Log.d("AccessibilityService", "click first in group")
                     } else {
                         Log.w("AccessibilityService", "empty group")
