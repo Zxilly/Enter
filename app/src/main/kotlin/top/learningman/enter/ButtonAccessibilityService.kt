@@ -34,10 +34,10 @@ class ButtonAccessibilityService : AccessibilityService() {
                     hideButton()
                 }
                 PRESS_ENTER -> {
-                    clickEnter()
+                    shortClick()
                 }
                 PRESS_VOICE -> {
-                    clickVoice()
+                    longClick()
                 }
             }
         }

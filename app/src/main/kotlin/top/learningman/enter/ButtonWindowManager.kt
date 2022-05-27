@@ -43,10 +43,10 @@ object ButtonWindowManager {
         }
         mView = ButtonBinding.inflate(layoutInflater, null, false).apply {
             button.setOnClickListener {
-                service.clickEnter()
+                service.shortClick()
             }
             button.setOnLongClickListener {
-                service.clickVoice()
+                service.longClick()
                 true
             }
         }.root.apply {

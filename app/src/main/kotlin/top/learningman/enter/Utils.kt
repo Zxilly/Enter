@@ -36,7 +36,7 @@ object AccessibilityUtil {
     }
 }
 
-fun AccessibilityService.clickEnter() {
+fun AccessibilityService.shortClick() {
     rootInActiveWindow?.let { rootWindow ->
         rootWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
             ?.let {
@@ -50,14 +50,31 @@ fun AccessibilityService.clickEnter() {
                 it.recycle()
                 rootWindow.recycle()
             }
-            ?: Log.d(
-                "AccessibilityService",
-                "Not found should focus input"
-            )
+            ?: let {
+                // if no focus element, try to click first in ans group
+                // cn.com.langeasy.LangEasyLexis:id/tv_know
+                // cn.com.langeasy.LangEasyLexis:id/tv_dim
+                // cn.com.langeasy.LangEasyLexis:id/tv_unknow
+                // cn.com.langeasy.LangEasyLexis:id/ll_isknow (group to contain above)
+                val nodes = rootWindow
+                    .findAccessibilityNodeInfosByViewId("cn.com.langeasy.LangEasyLexis:id/ll_isknow")
+                if (nodes.isNotEmpty()) {
+                    val group = nodes[0]
+                    if (group.childCount >= 1) {
+                        val first = group.getChild(0)
+                        first.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id)
+                        Log.d("AccessibilityService", "click first in group")
+                    } else {
+                        Log.w("AccessibilityService", "empty group")
+                    }
+                }
+                nodes.forEach { it.recycle() }
+                rootWindow.recycle()
+            }
     } ?: Log.d("AccessibilityService", "rootInActiveWindow is null")
 }
 
-fun AccessibilityService.clickVoice() {
+fun AccessibilityService.longClick() {
     rootInActiveWindow?.let { rootWindow ->
         val nodes = rootWindow.findAccessibilityNodeInfosByViewId(
             "cn.com.langeasy.LangEasyLexis:id/iv_spell_prompt"
