@@ -56,10 +56,10 @@ fun AccessibilityService.shortClick() {
                 // cn.com.langeasy.LangEasyLexis:id/tv_dim
                 // cn.com.langeasy.LangEasyLexis:id/tv_unknow
                 // cn.com.langeasy.LangEasyLexis:id/ll_isknow (group to contain above)
-                val nodes = rootWindow
+                val knowNodes = rootWindow
                     .findAccessibilityNodeInfosByViewId("cn.com.langeasy.LangEasyLexis:id/ll_isknow")
-                if (nodes.isNotEmpty()) {
-                    val group = nodes[0]
+                if (knowNodes.isNotEmpty()) {
+                    val group = knowNodes[0]
                     if (group.childCount >= 1) {
                         val first = group.getChild(0)
                         first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -67,8 +67,26 @@ fun AccessibilityService.shortClick() {
                     } else {
                         Log.w("AccessibilityService", "empty group")
                     }
+                    knowNodes.forEach(AccessibilityNodeInfo::recycle)
+                } else {
+                    // try to click next
+                    val nextNodes = rootWindow
+                        .findAccessibilityNodeInfosByViewId("cn.com.langeasy.LangEasyLexis:id/ll_sentence_next")
+                    if (nextNodes.isNotEmpty()) {
+                        val next = nextNodes[0]
+                        // click first child
+                        if (next.childCount >= 1) {
+                            val first = next.getChild(0)
+                            first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                            Log.d("AccessibilityService", "click next")
+                        } else {
+                            Log.w("AccessibilityService", "empty next")
+                        }
+                        nextNodes.forEach(AccessibilityNodeInfo::recycle)
+                    } else {
+                        Log.w("AccessibilityService", "empty next")
+                    }
                 }
-                nodes.forEach { it.recycle() }
                 rootWindow.recycle()
             }
     } ?: Log.d("AccessibilityService", "rootInActiveWindow is null")
