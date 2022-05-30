@@ -3,6 +3,7 @@ package top.learningman.enter
 import android.accessibilityservice.AccessibilityService
 import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
+import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTION_IME_ENTER
 import android.widget.Toast
 
 
@@ -45,7 +46,7 @@ fun AccessibilityService.clickEnter() {
     root {
         findFocus(AccessibilityNodeInfo.FOCUS_INPUT)?.let {
             if (!it.text.isNullOrBlank()) {
-                it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                it.performAction(ACTION_IME_ENTER.id)
                 Log.d("AccessibilityService", "apply enter")
             } else {
                 Toast.makeText(this, "empty input", Toast.LENGTH_SHORT).show()
@@ -72,8 +73,14 @@ fun AccessibilityService.clickNext() {
     }
 }
 
-fun AccessibilityService.clickSpell() {
+fun AccessibilityService.clickSpell1() {
+    findSingleNode("cn.com.langeasy.LangEasyLexis:id/iv_spell_voice") {
+        it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+    }
+}
+
+fun AccessibilityService.clickSpell2() {
     findSingleNode("cn.com.langeasy.LangEasyLexis:id/iv_spell_prompt") {
-        it.clickFirstChild("click spell")
+        it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
     }
 }

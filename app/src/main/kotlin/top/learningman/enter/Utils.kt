@@ -46,7 +46,7 @@ fun AccessibilityService.shortClick() {
 }
 
 fun AccessibilityService.longClick() {
-    tryFunctions({ clickSpell() }, { noAction(this) })
+    tryFunctions({ clickSpell1() }, { clickSpell2() }, { noAction(this) })
 }
 
 private fun tryFunctions(vararg functions: () -> Unit): Boolean {
