@@ -11,7 +11,7 @@ class QSTileService : TileService() {
         super.onStartListening()
         val tile = qsTile
         tile.label = "Enter"
-        if (!isButtonAvailable(this)) {
+        if (!AccessibilityUtil.isButtonAvailable(this)) {
             tile.state = Tile.STATE_INACTIVE
         } else {
             if (ButtonWindowManager.isShowing()) {
@@ -25,7 +25,7 @@ class QSTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        if (isButtonAvailable(this)) {
+        if (AccessibilityUtil.isButtonAvailable(this)) {
             if (ButtonWindowManager.isShowing()) {
                 val intent = Intent(this, ButtonAccessibilityService::class.java).apply {
                     putExtra(
