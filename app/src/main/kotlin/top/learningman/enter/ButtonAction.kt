@@ -42,45 +42,47 @@ private fun AccessibilityNodeInfo.clickFirstChild(
     }
 }
 
-fun AccessibilityService.clickEnter() {
-    root {
-        findFocus(AccessibilityNodeInfo.FOCUS_INPUT)?.let {
-            if (!it.text.isNullOrBlank()) {
-                it.performAction(ACTION_IME_ENTER.id)
-                Log.d("AccessibilityService", "apply enter")
-            } else {
-                Toast.makeText(this, "empty input", Toast.LENGTH_SHORT).show()
-                Log.d("AccessibilityService", "empty input")
-            }
-        } ?: throw ActionFailedException()
+object ButtonAction {
+    val clickEnter: (AccessibilityService) -> Unit = { service ->
+        service.root {
+            it.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)?.let {
+                if (!it.text.isNullOrBlank()) {
+                    it.performAction(ACTION_IME_ENTER.id)
+                    Log.d("AccessibilityService", "apply enter")
+                } else {
+                    Toast.makeText(service, "empty input", Toast.LENGTH_SHORT).show()
+                    Log.d("AccessibilityService", "empty input")
+                }
+            } ?: throw ActionFailedException()
+        }
     }
-}
 
-fun AccessibilityService.clickKnow() {
-    // if no focus element, try to click first in ans group
-    // cn.com.langeasy.LangEasyLexis:id/tv_know
-    // cn.com.langeasy.LangEasyLexis:id/tv_dim
-    // cn.com.langeasy.LangEasyLexis:id/tv_unknow
-    // cn.com.langeasy.LangEasyLexis:id/ll_isknow (group to contain above)
-    findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_isknow") {
-        it.clickFirstChild("click know")
+    val clickKnow: (AccessibilityService) -> Unit = { service ->
+        // if no focus element, try to click first in ans group
+        // cn.com.langeasy.LangEasyLexis:id/tv_know
+        // cn.com.langeasy.LangEasyLexis:id/tv_dim
+        // cn.com.langeasy.LangEasyLexis:id/tv_unknow
+        // cn.com.langeasy.LangEasyLexis:id/ll_isknow (group to contain above)
+        service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_isknow") {
+            it.clickFirstChild("click know")
+        }
     }
-}
 
-fun AccessibilityService.clickNext() {
-    findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_sentence_next") {
-        it.clickFirstChild("click next")
+    val clickNext: (AccessibilityService) -> Unit = { service ->
+        service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_sentence_next") {
+            it.clickFirstChild("click next")
+        }
     }
-}
 
-fun AccessibilityService.clickSpell1() {
-    findSingleNode("cn.com.langeasy.LangEasyLexis:id/iv_spell_voice") {
-        it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+    val clickSpell1: (AccessibilityService) -> Unit = { service ->
+        service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/iv_spell_voice") {
+            it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        }
     }
-}
 
-fun AccessibilityService.clickSpell2() {
-    findSingleNode("cn.com.langeasy.LangEasyLexis:id/iv_spell_prompt") {
-        it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+    val clickSpell2: (AccessibilityService) -> Unit = { service ->
+        service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/iv_spell_prompt") {
+            it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        }
     }
 }

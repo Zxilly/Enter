@@ -7,6 +7,7 @@ import android.content.Context
 import android.provider.Settings
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.microsoft.appcenter.crashes.Crashes
 import java.util.*
 
 
@@ -42,18 +43,37 @@ private fun noAction(context: Context) {
 }
 
 fun AccessibilityService.shortClick() {
-    tryFunctions({ clickEnter() }, { clickKnow() }, { clickNext() }, { noAction(this) })
+    tryFunctions(
+        this,
+        ButtonAction.clickEnter,
+        ButtonAction.clickKnow,
+        ButtonAction.clickNext,
+        ::noAction
+    )
 }
 
 fun AccessibilityService.longClick() {
-    tryFunctions({ clickSpell1() }, { clickSpell2() }, { noAction(this) })
+    tryFunctions(
+        this,
+        ButtonAction.clickSpell1,
+        ButtonAction.clickSpell2,
+        ::noAction
+    )
 }
 
-private fun tryFunctions(vararg functions: () -> Unit): Boolean {
+private fun <T> tryFunctions(arg: T, vararg functions: (T) -> Unit): Boolean {
     for (function in functions) {
-        val result = runCatching { function.invoke() }
+        val result = runCatching {
+            function(arg)
+        }
         if (result.isSuccess) {
             return true
+        } else {
+            val exception = result.exceptionOrNull()!!
+            if (exception !is ActionFailedException) {
+                exception.printStackTrace()
+                Crashes.trackError(exception)
+            }
         }
     }
     return false
