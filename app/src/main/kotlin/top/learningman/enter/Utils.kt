@@ -57,6 +57,8 @@ fun AccessibilityService.longClick() {
         this,
         ButtonAction.clickSpell1,
         ButtonAction.clickSpell2,
+        ButtonAction.clickUnKnow,
+        ButtonAction.clickMistaken,
         ::noAction
     )
 }
@@ -70,7 +72,7 @@ private fun <T> tryFunctions(arg: T, vararg functions: (T) -> Unit): Boolean {
             return true
         } else {
             val exception = result.exceptionOrNull()!!
-            if (exception !is ActionFailedException) {
+            if (exception !is ButtonAction.ActionFailedException) {
                 exception.printStackTrace()
                 Crashes.trackError(exception)
             }

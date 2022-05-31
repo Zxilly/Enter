@@ -7,42 +7,57 @@ import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction.ACTI
 import android.widget.Toast
 
 
-class ActionFailedException : Exception()
-
-private fun AccessibilityService.root(block: (root: AccessibilityNodeInfo) -> Unit) {
-    if (rootInActiveWindow == null) {
-        Toast.makeText(this, "Can not view window.", Toast.LENGTH_SHORT).show()
-        throw NullPointerException("rootInActiveWindow is null")
-    }
-    block(rootInActiveWindow)
-    rootInActiveWindow.recycle()
-}
-
-private fun AccessibilityService.findSingleNode(
-    id: String, block: (node: AccessibilityNodeInfo) -> Unit
-) {
-    root {
-        val nodes = it.findAccessibilityNodeInfosByViewId(id)
-        nodes.firstOrNull()?.let(block) ?: throw ActionFailedException()
-        nodes.forEach(AccessibilityNodeInfo::recycle)
-    }
-}
-
-private fun AccessibilityNodeInfo.clickFirstChild(
-    logMsg: String = "click first in group", errMsg: String = "empty group"
-) {
-    if (childCount >= 1) {
-        val first = getChild(0)
-        first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-        first.recycle()
-        Log.d("AccessibilityService", logMsg)
-    } else {
-        Log.w("AccessibilityService", errMsg)
-        throw ActionFailedException()
-    }
-}
-
 object ButtonAction {
+    class ActionFailedException : Exception()
+
+    private fun AccessibilityService.root(block: (root: AccessibilityNodeInfo) -> Unit) {
+        if (rootInActiveWindow == null) {
+            Toast.makeText(this, "Can not view window.", Toast.LENGTH_SHORT).show()
+            throw NullPointerException("rootInActiveWindow is null")
+        }
+        block(rootInActiveWindow)
+        rootInActiveWindow.recycle()
+    }
+
+    private fun AccessibilityService.findSingleNode(
+        id: String, block: (node: AccessibilityNodeInfo) -> Unit
+    ) {
+        root {
+            val nodes = it.findAccessibilityNodeInfosByViewId(id)
+            nodes.firstOrNull()?.let(block) ?: throw ActionFailedException()
+            nodes.forEach(AccessibilityNodeInfo::recycle)
+        }
+    }
+
+    private fun AccessibilityNodeInfo.clickFirstChild(
+        logMsg: String = "click first in group", errMsg: String = "empty group"
+    ) {
+        if (childCount >= 1) {
+            val first = getChild(0)
+            first.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            first.recycle()
+            Log.d("AccessibilityService", logMsg)
+        } else {
+            Log.w("AccessibilityService", errMsg)
+            throw ActionFailedException()
+        }
+    }
+
+    private fun AccessibilityNodeInfo.clickLastChild(
+        logMsg: String = "click last in group", errMsg: String = "empty group"
+    ) {
+        if (childCount >= 1) {
+            val last = getChild(childCount - 1)
+            last.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            last.recycle()
+            Log.d("AccessibilityService", logMsg)
+        } else {
+            Log.w("AccessibilityService", errMsg)
+            throw ActionFailedException()
+        }
+    }
+
+
     val clickEnter: (AccessibilityService) -> Unit = { service ->
         service.root {
             it.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)?.let {
@@ -68,9 +83,21 @@ object ButtonAction {
         }
     }
 
+    val clickUnKnow: (AccessibilityService) -> Unit = { service ->
+        service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_isknow") {
+            it.clickLastChild("click unknow")
+        }
+    }
+
     val clickNext: (AccessibilityService) -> Unit = { service ->
         service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_sentence_next") {
             it.clickFirstChild("click next")
+        }
+    }
+
+    val clickMistaken: (AccessibilityService) -> Unit = { service ->
+        service.findSingleNode("cn.com.langeasy.LangEasyLexis:id/ll_sentence_next") {
+            it.clickLastChild("click mistaken")
         }
     }
 
