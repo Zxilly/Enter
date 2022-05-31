@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                     binding.spen.setOnClickListener {
                         if (!isConnected) {
                             connect(
-                                applicationContext, sPenCallback
+                                this@MainActivity, sPenCallback
                             )
                             Toast.makeText(
                                 this@MainActivity,
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         } else {
-                            disconnect(applicationContext)
+                            disconnect(this@MainActivity)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Disconnecting from S Pen.",
