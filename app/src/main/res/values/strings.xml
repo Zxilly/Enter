@@ -8,4 +8,6 @@
     <string name="enter">Enter</string>
     <string name="enable_accessibility_tip">Please enable accessibility for this app.</string>
     <string name="toggle">Toggle</string>
+    <string name="spen">Toggle Spen</string>
+    <string name="spen_button">Enter Spen</string>
 </resources>

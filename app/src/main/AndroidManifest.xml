@@ -17,9 +17,10 @@
         android:theme="@style/Theme.BackSpace"
         tools:targetApi="31">
         <service
-            android:name=".QSTileService"
+            android:name=".FloatingQSTileService"
             android:exported="true"
             android:icon="@drawable/ic_pen_24px"
+            android:label="@string/enter"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -33,7 +34,6 @@
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
-
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -45,7 +45,6 @@
             android:theme="@style/Theme.BackSpace.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

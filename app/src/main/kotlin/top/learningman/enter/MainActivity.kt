@@ -65,6 +65,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val sPenCallback = object :
+        SpenRemote.ConnectionResultCallback {
+        override fun onSuccess(manager: SpenUnitManager) {
+            Toast.makeText(
+                this@MainActivity,
+                "Advanced feature enabled.",
+                Toast.LENGTH_LONG
+            ).show()
+            try {
+                manager.registerSpenEventListener(
+                    { event ->
+                        when (ButtonEvent(event).action) {
+                            ButtonEvent.ACTION_DOWN -> {
+                                mClickController.actionDown()
+                            }
+                            ButtonEvent.ACTION_UP -> {
+                                mClickController.actionUp()
+                            }
+                        }
+                    }, manager.getUnit(SpenUnit.TYPE_BUTTON)
+                )
+            } catch (e: Exception) {
+                if (e is SecurityException) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Failed to connect to S Pen. System error.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                Crashes.trackError(e)
+                Log.e(
+                    "SPen",
+                    "Failed to connect to S Pen. System error.",
+                    e
+                )
+                showErrorNotification(this@MainActivity, e)
+            }
+        }
+
+        override fun onFailure(code: Int) {
+            Toast.makeText(
+                this@MainActivity,
+                "Failed to connect to S Pen.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         if (!Settings.canDrawOverlays(this)) {
@@ -82,61 +130,33 @@ class MainActivity : AppCompatActivity() {
 
             with(SpenRemote.getInstance()) {
                 if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-                    if (!isConnected) {
-                        connect(
-                            this@MainActivity,
-                            object :
-                                SpenRemote.ConnectionResultCallback {
-                                override fun onSuccess(manager: SpenUnitManager) {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "SPen Checked. Advanced feature enabled.",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    try {
-                                        manager.registerSpenEventListener(
-                                            { event ->
-                                                when (ButtonEvent(event).action) {
-                                                    ButtonEvent.ACTION_DOWN -> {
-                                                        mClickController.actionDown()
-                                                    }
-                                                    ButtonEvent.ACTION_UP -> {
-                                                        mClickController.actionUp()
-                                                    }
-                                                }
-                                            }, manager.getUnit(SpenUnit.TYPE_BUTTON)
-                                        )
-                                    } catch (e: Exception) {
-                                        if (e is SecurityException) {
-                                            Toast.makeText(
-                                                this@MainActivity,
-                                                "Failed to connect to S Pen. System error.",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                        Crashes.trackError(e)
-                                        Log.e(
-                                            "SPen",
-                                            "Failed to connect to S Pen. System error.",
-                                            e
-                                        )
-                                        showErrorNotification(this@MainActivity, e)
-                                    }
-                                }
-
-                                override fun onFailure(code: Int) {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "Failed to connect to S Pen.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            })
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Advanced feature enabled.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    binding.spen.visibility = View.VISIBLE
+                    binding.spen.setOnClickListener {
+                        if (!isConnected) {
+                            connect(
+                                applicationContext, sPenCallback
+                            )
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Connecting to S Pen.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            disconnect(applicationContext)
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Disconnecting from S Pen.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
             }
-
-
         }
     }
 
@@ -147,7 +167,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            // R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -157,6 +176,11 @@ class MainActivity : AppCompatActivity() {
         with(SpenRemote.getInstance()) {
             if (isConnected) {
                 disconnect(this@MainActivity)
+                Toast.makeText(
+                    this@MainActivity,
+                    "Disconnecting from S Pen.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

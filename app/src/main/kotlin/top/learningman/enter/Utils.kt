@@ -12,7 +12,7 @@ import java.util.*
 
 
 object AccessibilityUtil {
-    fun isButtonAvailable(context: Context): Boolean {
+    fun isFloatingButtonAvailable(context: Context): Boolean {
         return isAccessibilitySettingsOn(context) and Settings.canDrawOverlays(
             context
         )
