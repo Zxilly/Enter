@@ -136,11 +136,22 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                     binding.spen.visibility = View.VISIBLE
+                    binding.spen.visibility = View.VISIBLE
+
+                    fun spenStatusText(isConnect: Boolean) {
+                        binding.spenTip.text = if (isConnect) {
+                            "S Pen connected"
+                        } else {
+                            "S Pen disconnected"
+                        }
+                    }
+                    spenStatusText(isConnected)
                     binding.spen.setOnClickListener {
                         if (!isConnected) {
                             connect(
                                 this@MainActivity, sPenCallback
                             )
+                            spenStatusText(true)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Connecting to S Pen.",
@@ -148,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                         } else {
                             disconnect(this@MainActivity)
+                            spenStatusText(false)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Disconnecting from S Pen.",
