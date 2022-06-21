@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity() {
                     "Disconnecting from S Pen.",
                     Toast.LENGTH_LONG
                 ).show()
+                hideSPenNotification()
             }
         }
     }
