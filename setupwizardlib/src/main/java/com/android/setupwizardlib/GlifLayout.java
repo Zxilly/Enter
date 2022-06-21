@@ -16,17 +16,11 @@
 
 package com.android.setupwizardlib;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +29,11 @@ import android.view.ViewStub;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.setupwizardlib.template.ButtonFooterMixin;
 import com.android.setupwizardlib.template.ColoredHeaderMixin;
 import com.android.setupwizardlib.template.HeaderMixin;
@@ -92,7 +91,6 @@ public class GlifLayout extends TemplateLayout {
     init(attrs, R.attr.suwLayoutTheme);
   }
 
-  @TargetApi(VERSION_CODES.HONEYCOMB)
   public GlifLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(attrs, defStyleAttr);
@@ -144,7 +142,7 @@ public class GlifLayout extends TemplateLayout {
 
     a.recycle();
 
-    if (Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && layoutFullscreen) {
+    if (layoutFullscreen) {
       setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
   }
