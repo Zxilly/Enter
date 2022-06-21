@@ -1,5 +1,9 @@
 package top.learningman.enter.activity
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +12,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
@@ -128,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                             "Connecting to S Pen.",
                             Toast.LENGTH_LONG
                         ).show()
+                        showSPenNotification()
                     } else {
                         disconnect(this@MainActivity)
                         spenStatusText(false)
@@ -136,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                             "Disconnecting from S Pen.",
                             Toast.LENGTH_LONG
                         ).show()
+                        hideSPenNotification()
                     }
                 }
             }
@@ -167,8 +175,43 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showSpenNotification() {
+    fun showSPenNotification() {
+        val channelID = "SpenNotification"
+        fun createNotificationChannel() {
+            val name = "SPen Notification"
+            val descriptionText = "SPen Notification"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelID, name, importance).apply {
+                description = descriptionText
+            }
 
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+        createNotificationChannel()
+        val notifyIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val notifyPendingIntent = PendingIntent.getActivity(
+            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val builder = NotificationCompat.Builder(this, channelID)
+            .setSmallIcon(R.drawable.ic_pen_24px)
+            .setContentTitle("Enter")
+            .setContentText("SPen connected.")
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+            .setContentIntent(notifyPendingIntent)
+        with(NotificationManagerCompat.from(this)) {
+            notify(2, builder.build())
+        }
+    }
+
+    fun hideSPenNotification() {
+        with(NotificationManagerCompat.from(this)) {
+            cancel(2)
+        }
     }
 
     private val mClickController = object {
