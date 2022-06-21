@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "top.learningman.enter"
-        minSdk 30
+        minSdk 29
         targetSdk 32
         versionCode = currentVersionCode
         versionName "1.5"
