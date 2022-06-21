@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.google.android.material.internal.ManufacturerUtils
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
@@ -110,40 +112,42 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        with(SpenRemote.getInstance()) {
-            if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-                binding.spen.visibility = View.VISIBLE
-                binding.spenTip.visibility = View.VISIBLE
+        if (Build.MANUFACTURER.lowercase() == "samsung"){
+            with(SpenRemote.getInstance()) {
+                if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
+                    binding.spen.visibility = View.VISIBLE
+                    binding.spenTip.visibility = View.VISIBLE
 
-                fun spenStatusText(isConnect: Boolean) {
-                    binding.spenTip.text = if (isConnect) {
-                        "S Pen connected"
-                    } else {
-                        "S Pen disconnected"
+                    fun spenStatusText(isConnect: Boolean) {
+                        binding.spenTip.text = if (isConnect) {
+                            "S Pen connected"
+                        } else {
+                            "S Pen disconnected"
+                        }
                     }
-                }
-                spenStatusText(isConnected)
-                binding.spen.setOnClickListener {
-                    if (!isConnected) {
-                        connect(
-                            this@MainActivity, sPenCallback
-                        )
-                        spenStatusText(true)
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Connecting to S Pen.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        showSPenNotification()
-                    } else {
-                        disconnect(this@MainActivity)
-                        spenStatusText(false)
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Disconnecting from S Pen.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        hideSPenNotification()
+                    spenStatusText(isConnected)
+                    binding.spen.setOnClickListener {
+                        if (!isConnected) {
+                            connect(
+                                this@MainActivity, sPenCallback
+                            )
+                            spenStatusText(true)
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Connecting to S Pen.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            showSPenNotification()
+                        } else {
+                            disconnect(this@MainActivity)
+                            spenStatusText(false)
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Disconnecting from S Pen.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            hideSPenNotification()
+                        }
                     }
                 }
             }
