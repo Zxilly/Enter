@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import top.learningman.enter.activity.SetupActivity
 import top.learningman.enter.databinding.FragmentAccessibilityBinding
-import top.learningman.enter.utils.A18yCheck
+import top.learningman.enter.utils.AccessibilityCheck
 import top.learningman.enter.viewModel.AccessibilityFragmentViewModel
 
 class AccessibilityFragment : Fragment() {
@@ -21,7 +21,7 @@ class AccessibilityFragment : Fragment() {
         fun newInstance() = AccessibilityFragment()
 
         fun on(context: Context): Boolean {
-            return !A18yCheck.isAccessibilitySettingsOn(context)
+            return !AccessibilityCheck.isAccessibilitySettingsOn(context)
         }
     }
 

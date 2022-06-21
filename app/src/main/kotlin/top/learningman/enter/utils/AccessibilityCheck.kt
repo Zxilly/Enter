@@ -5,7 +5,7 @@ import android.provider.Settings
 import android.widget.Toast
 import java.util.*
 
-object A18yCheck {
+object AccessibilityCheck {
     fun isFloatingButtonAvailable(context: Context): Boolean {
         return isAccessibilitySettingsOn(context) and Settings.canDrawOverlays(
             context

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.widget.Toast
-import top.learningman.enter.utils.A18yCheck
+import top.learningman.enter.utils.AccessibilityCheck
 import top.learningman.enter.view.ButtonWindowManager
 import top.learningman.enter.activity.MainActivity
 
@@ -14,7 +14,7 @@ class FloatingQSTileService : TileService() {
         super.onStartListening()
         val tile = qsTile
         tile.label = "Enter"
-        if (!A18yCheck.isFloatingButtonAvailable(this)) {
+        if (!AccessibilityCheck.isFloatingButtonAvailable(this)) {
             tile.state = Tile.STATE_INACTIVE
         } else {
             if (ButtonWindowManager.isShowing()) {
@@ -28,7 +28,7 @@ class FloatingQSTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        if (A18yCheck.isFloatingButtonAvailable(this)) {
+        if (AccessibilityCheck.isFloatingButtonAvailable(this)) {
             if (ButtonWindowManager.isShowing()) {
                 val intent = Intent(this, ButtonAccessibilityService::class.java).apply {
                     putExtra(
