@@ -1,4 +1,4 @@
-package top.learningman.enter
+package top.learningman.enter.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -18,8 +18,13 @@ import com.samsung.android.sdk.penremote.ButtonEvent
 import com.samsung.android.sdk.penremote.SpenRemote
 import com.samsung.android.sdk.penremote.SpenUnit
 import com.samsung.android.sdk.penremote.SpenUnitManager
-import top.learningman.enter.AccessibilityUtil.isAccessibilitySettingsOn
+import top.learningman.enter.utils.A18yCheck.isAccessibilitySettingsOn
+import top.learningman.enter.view.ButtonWindowManager
+import top.learningman.enter.Config
+import top.learningman.enter.R
 import top.learningman.enter.databinding.ActivityMainBinding
+import top.learningman.enter.services.ButtonAccessibilityService
+import top.learningman.enter.showErrorNotification
 
 
 class MainActivity : AppCompatActivity() {
@@ -130,13 +135,8 @@ class MainActivity : AppCompatActivity() {
 
             with(SpenRemote.getInstance()) {
                 if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Advanced feature enabled.",
-                        Toast.LENGTH_LONG
-                    ).show()
                     binding.spen.visibility = View.VISIBLE
-                    binding.spen.visibility = View.VISIBLE
+                    binding.spenTip.visibility = View.VISIBLE
 
                     fun spenStatusText(isConnect: Boolean) {
                         binding.spenTip.text = if (isConnect) {

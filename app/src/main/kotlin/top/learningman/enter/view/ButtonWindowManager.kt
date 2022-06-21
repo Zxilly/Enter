@@ -1,4 +1,4 @@
-package top.learningman.enter
+package top.learningman.enter.view
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
@@ -6,7 +6,10 @@ import android.graphics.PixelFormat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
+import top.learningman.enter.R
 import top.learningman.enter.databinding.ButtonBinding
+import top.learningman.enter.utils.longClick
+import top.learningman.enter.utils.shortClick
 
 
 object ButtonWindowManager {

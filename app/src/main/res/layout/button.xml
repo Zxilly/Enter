@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<top.learningman.enter.ButtonView xmlns:android="http://schemas.android.com/apk/res/android"
+<top.learningman.enter.view.ButtonView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/button"
     android:layout_width="wrap_content"

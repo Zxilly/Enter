@@ -1,4 +1,4 @@
-package top.learningman.enter
+package top.learningman.enter.view
 
 import android.accessibilityservice.AccessibilityService
 import android.util.Log

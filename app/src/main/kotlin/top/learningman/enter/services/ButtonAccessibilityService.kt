@@ -1,4 +1,4 @@
-package top.learningman.enter
+package top.learningman.enter.services
 
 import android.accessibilityservice.AccessibilityService
 import android.app.NotificationChannel
@@ -11,6 +11,10 @@ import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.microsoft.appcenter.analytics.Analytics
+import top.learningman.enter.view.ButtonWindowManager
+import top.learningman.enter.R
+import top.learningman.enter.utils.longClick
+import top.learningman.enter.utils.shortClick
 
 
 class ButtonAccessibilityService : AccessibilityService() {

@@ -17,7 +17,7 @@
         android:theme="@style/Theme.BackSpace"
         tools:targetApi="31">
         <service
-            android:name=".FloatingQSTileService"
+            android:name=".services.FloatingQSTileService"
             android:exported="true"
             android:icon="@drawable/ic_pen_24px"
             android:label="@string/enter"
@@ -27,7 +27,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".ButtonAccessibilityService"
+            android:name=".services.ButtonAccessibilityService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -40,7 +40,7 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.BackSpace.NoActionBar">
             <intent-filter>
