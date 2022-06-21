@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showSPenNotification() {
+    private fun showSPenNotification() {
         val channelID = "SpenNotification"
         fun createNotificationChannel() {
             val name = "SPen Notification"
@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun hideSPenNotification() {
+    private fun hideSPenNotification() {
         with(NotificationManagerCompat.from(this)) {
             cancel(2)
         }
