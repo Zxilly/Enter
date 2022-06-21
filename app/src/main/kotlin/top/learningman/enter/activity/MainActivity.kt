@@ -1,9 +1,7 @@
 package top.learningman.enter.activity
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,13 +16,12 @@ import com.samsung.android.sdk.penremote.ButtonEvent
 import com.samsung.android.sdk.penremote.SpenRemote
 import com.samsung.android.sdk.penremote.SpenUnit
 import com.samsung.android.sdk.penremote.SpenUnitManager
-import top.learningman.enter.utils.A18yCheck.isAccessibilitySettingsOn
-import top.learningman.enter.view.ButtonWindowManager
 import top.learningman.enter.Config
 import top.learningman.enter.R
 import top.learningman.enter.databinding.ActivityMainBinding
 import top.learningman.enter.services.ButtonAccessibilityService
 import top.learningman.enter.showErrorNotification
+import top.learningman.enter.view.ButtonWindowManager
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         AppCenter.start(
             application, "bdb6695f-b9af-49dd-ae56-2a2bdd4232c8",
             Analytics::class.java, Crashes::class.java, Distribute::class.java
@@ -43,18 +39,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-
-        binding.grant.setOnClickListener {
-            // grant overlay permission
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        }
-
-        binding.accessibility.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            Toast.makeText(this, "Please enable accessibility", Toast.LENGTH_SHORT).show()
-        }
 
         binding.toggle.setOnClickListener {
             val intent = Intent(this, ButtonAccessibilityService::class.java)
@@ -73,11 +57,11 @@ class MainActivity : AppCompatActivity() {
     private val sPenCallback = object :
         SpenRemote.ConnectionResultCallback {
         override fun onSuccess(manager: SpenUnitManager) {
-            Toast.makeText(
-                this@MainActivity,
-                "Advanced feature enabled.",
-                Toast.LENGTH_LONG
-            ).show()
+//            Toast.makeText(
+//                this@MainActivity,
+//                "Advanced feature enabled.",
+//                Toast.LENGTH_LONG
+//            ).show()
             try {
                 manager.registerSpenEventListener(
                     { event ->
@@ -120,52 +104,38 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!Settings.canDrawOverlays(this)) {
-            binding.waitForPermission.visibility = View.VISIBLE
-            binding.waitForAccessibility.visibility = View.GONE
-            binding.waitForStartup.visibility = View.GONE
-        } else if (!isAccessibilitySettingsOn(this)) {
-            binding.waitForAccessibility.visibility = View.VISIBLE
-            binding.waitForPermission.visibility = View.GONE
-            binding.waitForStartup.visibility = View.GONE
-        } else {
-            binding.waitForStartup.visibility = View.VISIBLE
-            binding.waitForAccessibility.visibility = View.GONE
-            binding.waitForPermission.visibility = View.GONE
+        with(SpenRemote.getInstance()) {
+            if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
+                binding.spen.visibility = View.VISIBLE
+                binding.spenTip.visibility = View.VISIBLE
 
-            with(SpenRemote.getInstance()) {
-                if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-                    binding.spen.visibility = View.VISIBLE
-                    binding.spenTip.visibility = View.VISIBLE
-
-                    fun spenStatusText(isConnect: Boolean) {
-                        binding.spenTip.text = if (isConnect) {
-                            "S Pen connected"
-                        } else {
-                            "S Pen disconnected"
-                        }
+                fun spenStatusText(isConnect: Boolean) {
+                    binding.spenTip.text = if (isConnect) {
+                        "S Pen connected"
+                    } else {
+                        "S Pen disconnected"
                     }
-                    spenStatusText(isConnected)
-                    binding.spen.setOnClickListener {
-                        if (!isConnected) {
-                            connect(
-                                this@MainActivity, sPenCallback
-                            )
-                            spenStatusText(true)
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Connecting to S Pen.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            disconnect(this@MainActivity)
-                            spenStatusText(false)
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Disconnecting from S Pen.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
+                }
+                spenStatusText(isConnected)
+                binding.spen.setOnClickListener {
+                    if (!isConnected) {
+                        connect(
+                            this@MainActivity, sPenCallback
+                        )
+                        spenStatusText(true)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Connecting to S Pen.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        disconnect(this@MainActivity)
+                        spenStatusText(false)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Disconnecting from S Pen.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
@@ -195,6 +165,10 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    fun showSpenNotification() {
+
     }
 
     private val mClickController = object {
