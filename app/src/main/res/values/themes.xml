@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.BackSpace" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.BackSpace" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -19,9 +19,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.BackSpace.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.BackSpace.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="Theme.BackSpace.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.BackSpace.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
     <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
         <item name="cornerFamily">rounded</item>
