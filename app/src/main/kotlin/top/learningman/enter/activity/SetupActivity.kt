@@ -28,8 +28,7 @@ class SetupActivity : AppCompatActivity() {
             registerOnPageChangeCallback(object : OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    val target = supportFragmentManager.findFragmentByTag("f$position")
-                    when (target) {
+                    when (supportFragmentManager.findFragmentByTag("f$position")) {
                         is AccessibilityFragment -> {
                             binding.setup.headerText = "Require Accessibility Permission"
                         }
@@ -66,10 +65,6 @@ class SetupActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     fun pass() {

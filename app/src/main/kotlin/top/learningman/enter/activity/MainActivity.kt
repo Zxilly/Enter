@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.microsoft.appcenter.crashes.Crashes
 import com.samsung.android.sdk.penremote.ButtonEvent
 import com.samsung.android.sdk.penremote.SpenRemote
@@ -25,6 +26,7 @@ import top.learningman.enter.R
 import top.learningman.enter.databinding.ActivityMainBinding
 import top.learningman.enter.services.ButtonAccessibilityService
 import top.learningman.enter.showErrorNotification
+import top.learningman.enter.utils.ButtonBroadcast
 import top.learningman.enter.view.ButtonWindowManager
 
 
@@ -40,17 +42,43 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        binding.toggle.setOnClickListener {
-            val intent = Intent(this, ButtonAccessibilityService::class.java)
-            intent.putExtra(
-                ButtonAccessibilityService.TYPE_KEY,
-                if (ButtonWindowManager.isShowing()) {
-                    ButtonAccessibilityService.REMOVE_VIEW
-                } else {
-                    ButtonAccessibilityService.ADD_VIEW
-                }
-            )
-            startService(intent)
+        binding.enterButton.setOnClickListener {
+            val action = if (ButtonWindowManager.isShowing()) {
+                ButtonAccessibilityService.REMOVE_VIEW
+            } else {
+                ButtonAccessibilityService.ADD_VIEW
+            }
+            ButtonAccessibilityService.triggerAction(this, action)
+        }
+
+        binding.spenButton.setOnClickListener {
+            Log.d("Spen Button", "SPen button clicked")
+            val sp = SpenRemote.getInstance()
+            if (!sp.isConnected) {
+                sp.connect(
+                    this@MainActivity, sPenCallback
+                )
+                Toast.makeText(
+                    this@MainActivity,
+                    "Connecting to S Pen.",
+                    Toast.LENGTH_LONG
+                ).show()
+                showSPenNotification()
+                enableSPenButton()
+            } else {
+                sp.disconnect(this@MainActivity)
+                Toast.makeText(
+                    this@MainActivity,
+                    "Disconnecting from S Pen.",
+                    Toast.LENGTH_LONG
+                ).show()
+                hideSPenNotification()
+                disableSPenButton()
+            }
+        }
+
+        if (!isSPenAvailable()) {
+            binding.spenButton.visibility = View.GONE
         }
     }
 
@@ -97,48 +125,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun isSPenAvailable(): Boolean {
+        if (!isSamsung()) return false
+        val sp = SpenRemote.getInstance()
+        if (!sp.isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
+            return false
+        }
+        return true
+    }
+
+    private val buttonReceiver = object : ButtonBroadcast.Receiver() {
+        override fun onEnableEnterButton() {
+            enableEnterButton()
+        }
+        override fun onDisableEnterButton() {
+            disableEnterButton()
+        }
+        override fun onEnableSpenBinding() {
+            enableSPenButton()
+        }
+        override fun onDisableSpenBinding() {
+            disableSPenButton()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        if (Build.MANUFACTURER.lowercase() == "samsung"){
-            with(SpenRemote.getInstance()) {
-                if (isFeatureEnabled(SpenRemote.FEATURE_TYPE_BUTTON)) {
-                    binding.spen.visibility = View.VISIBLE
-                    binding.spenTip.visibility = View.VISIBLE
-
-                    fun spenStatusText(isConnect: Boolean) {
-                        binding.spenTip.text = if (isConnect) {
-                            "S Pen connected"
-                        } else {
-                            "S Pen disconnected"
-                        }
-                    }
-                    spenStatusText(isConnected)
-                    binding.spen.setOnClickListener {
-                        if (!isConnected) {
-                            connect(
-                                this@MainActivity, sPenCallback
-                            )
-                            spenStatusText(true)
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Connecting to S Pen.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            showSPenNotification()
-                        } else {
-                            disconnect(this@MainActivity)
-                            spenStatusText(false)
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Disconnecting from S Pen.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            hideSPenNotification()
-                        }
-                    }
-                }
-            }
+        if (ButtonWindowManager.isShowing()) {
+            enableEnterButton()
+        } else {
+            disableEnterButton()
         }
+        val sp = SpenRemote.getInstance()
+        if (sp.isConnected) {
+            enableSPenButton()
+        } else {
+            disableSPenButton()
+        }
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .registerReceiver(buttonReceiver, ButtonBroadcast.filter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager
+            .getInstance(this)
+            .unregisterReceiver(buttonReceiver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -184,7 +218,7 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         val notifyIntent = Intent(this, MainActivity::class.java)
         val notifyPendingIntent = PendingIntent.getActivity(
-            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            applicationContext, 0, notifyIntent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
         val builder = NotificationCompat.Builder(this, channelID)
             .setSmallIcon(R.drawable.ic_pen_24px)
@@ -203,6 +237,23 @@ class MainActivity : AppCompatActivity() {
             cancel(2)
         }
     }
+
+    private fun enableEnterButton() {
+        binding.enterButton.isChecked = true
+    }
+
+    private fun disableEnterButton() {
+        binding.enterButton.isChecked = false
+    }
+
+    private fun enableSPenButton() {
+        binding.spenButton.isChecked = true
+    }
+
+    private fun disableSPenButton() {
+        binding.spenButton.isChecked = false
+    }
+
 
     private val mClickController = object {
         private var mLastDown = 0L
@@ -227,6 +278,12 @@ class MainActivity : AppCompatActivity() {
                     ButtonAccessibilityService.PRESS_VOICE
                 )
             }
+        }
+    }
+
+    companion object {
+        private fun isSamsung(): Boolean {
+            return Build.MANUFACTURER.lowercase() == "samsung"
         }
     }
 }

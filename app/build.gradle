@@ -4,17 +4,17 @@ plugins {
 }
 
 def currentVersionCode = (new Date()).getTime() / 1000
+def currentVersionName = new Date().toString()
 
 android {
     compileSdk 32
 
     defaultConfig {
         applicationId "top.learningman.enter"
-        minSdk 29
+        minSdk 30
         targetSdk 32
         versionCode = currentVersionCode
-        versionName "1.5"
-
+        versionName = currentVersionName
     }
 
     signingConfigs {

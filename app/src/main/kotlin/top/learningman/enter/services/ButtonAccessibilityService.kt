@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import com.microsoft.appcenter.analytics.Analytics
 import top.learningman.enter.view.ButtonWindowManager
 import top.learningman.enter.R
+import top.learningman.enter.utils.ButtonBroadcast
 import top.learningman.enter.utils.longClick
 import top.learningman.enter.utils.shortClick
 
@@ -32,10 +33,12 @@ class ButtonAccessibilityService : AccessibilityService() {
                 ADD_VIEW -> {
                     Analytics.trackEvent("Show Button")
                     showButton()
+                    ButtonBroadcast.enableEnterButton(this)
                 }
                 REMOVE_VIEW -> {
                     Analytics.trackEvent("Hide Button")
                     hideButton()
+                    ButtonBroadcast.disableEnterButton(this)
                 }
                 PRESS_ENTER -> {
                     shortClick()
