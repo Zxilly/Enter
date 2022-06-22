@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp"
     tools:context=".fragment.setup.AccessibilityFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/wait_for_accessibility"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
 
         <!--        <androidx.appcompat.widget.AppCompatImageView-->
         <!--            android:layout_width="wrap_content"-->
@@ -19,14 +20,14 @@
         <!--            android:layout_margin="16dp"-->
         <!--            android:src="@drawable/ic_warning" />-->
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="@string/enable_accessibility_tip"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/accessibility"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
