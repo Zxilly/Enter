@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.android.setupwizardlib.view.NavigationBar
 import top.learningman.enter.databinding.ActivitySetupBinding
 import top.learningman.enter.fragment.setup.AccessibilityFragment
@@ -24,10 +25,26 @@ class SetupActivity : AppCompatActivity() {
             adapter = PagerAdapter(this@SetupActivity)
             offscreenPageLimit = 1
             isUserInputEnabled = false
+            registerOnPageChangeCallback(object : OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    val target = supportFragmentManager.findFragmentByTag("f$position")
+                    when (target) {
+                        is AccessibilityFragment -> {
+                            binding.setup.headerText = "Require Accessibility Permission"
+                        }
+                        is PermissionFragment -> {
+                            binding.setup.headerText = "Require Overlay Permission"
+                        }
+                        else -> throw IllegalStateException("Unknown fragment")
+                    }
+                }
+            })
         }
 
         with(binding.setup) {
             navigationBar.backButton.visibility = View.GONE
+            navigationBar.nextButton.isEnabled = false
             navigationBar.setNavigationBarListener(object : NavigationBar.NavigationBarListener {
                 override fun onNavigateBack() {
                 }
@@ -40,6 +57,7 @@ class SetupActivity : AppCompatActivity() {
                         finish()
                     } else {
                         binding.viewPager.currentItem = 1
+                        navigationBar.nextButton.isEnabled = false
                     }
                 }
             })
@@ -56,10 +74,6 @@ class SetupActivity : AppCompatActivity() {
 
     fun pass() {
         binding.setup.navigationBar.nextButton.isEnabled = true
-    }
-
-    fun setHeader(title: String) {
-        binding.setup.headerText = title
     }
 
     class PagerAdapter(private val fa: FragmentActivity) : FragmentStateAdapter(fa) {

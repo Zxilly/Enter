@@ -15,10 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
-import com.microsoft.appcenter.distribute.Distribute
 import com.samsung.android.sdk.penremote.ButtonEvent
 import com.samsung.android.sdk.penremote.SpenRemote
 import com.samsung.android.sdk.penremote.SpenUnit
@@ -37,10 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCenter.start(
-            application, "bdb6695f-b9af-49dd-ae56-2a2bdd4232c8",
-            Analytics::class.java, Crashes::class.java, Distribute::class.java
-        )
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -64,11 +57,6 @@ class MainActivity : AppCompatActivity() {
     private val sPenCallback = object :
         SpenRemote.ConnectionResultCallback {
         override fun onSuccess(manager: SpenUnitManager) {
-//            Toast.makeText(
-//                this@MainActivity,
-//                "Advanced feature enabled.",
-//                Toast.LENGTH_LONG
-//            ).show()
             try {
                 manager.registerSpenEventListener(
                     { event ->

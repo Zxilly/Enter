@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import top.learningman.enter.activity.SetupActivity
 import top.learningman.enter.databinding.FragmentPermissionBinding
-import top.learningman.enter.viewModel.PermissionFragmentViewModel
+import top.learningman.enter.viewmodel.PermissionFragmentViewModel
 
 class PermissionFragment : Fragment() {
 
@@ -50,11 +50,6 @@ class PermissionFragment : Fragment() {
                 viewModel.tryGrant()
             }
         }.root
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity() as SetupActivity).setHeader("Require Overlay Permission")
     }
 
     override fun onResume() {

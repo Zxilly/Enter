@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import top.learningman.enter.activity.SetupActivity
 import top.learningman.enter.databinding.FragmentAccessibilityBinding
 import top.learningman.enter.utils.AccessibilityCheck
-import top.learningman.enter.viewModel.AccessibilityFragmentViewModel
+import top.learningman.enter.viewmodel.AccessibilityFragmentViewModel
 
 class AccessibilityFragment : Fragment() {
 
@@ -47,11 +47,6 @@ class AccessibilityFragment : Fragment() {
                 viewModel.tryGrant()
             }
         }.root
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity() as SetupActivity).setHeader("Require Accessibility Service")
     }
 
     override fun onResume() {
