@@ -1,4 +1,4 @@
-package top.learningman.enter.viewModel
+package top.learningman.enter.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
