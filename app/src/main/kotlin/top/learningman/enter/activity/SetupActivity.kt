@@ -1,6 +1,7 @@
 package top.learningman.enter.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,11 @@ class SetupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        with(window){
+            statusBarColor = Color.TRANSPARENT
+            setDecorFitsSystemWindows(false)
+        }
 
         with(binding.viewPager) {
             adapter = PagerAdapter(this@SetupActivity)
