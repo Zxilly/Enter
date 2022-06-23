@@ -12,32 +12,27 @@ object ButtonBroadcast {
     const val ACTION_ENABLE_SPEN = "top.learningman.enter.action.ENABLE_SPEN_BINDING"
     const val ACTION_DISABLE_SPEN = "top.learningman.enter.action.DISABLE_SPEN_BINDING"
 
-    fun enableEnterButton(context: Context) {
-        Intent().also {
-            it.action = ACTION_ENABLE_ENTER
-            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
+    private fun sendAction(context: Context, action: String) {
+        val intent = Intent().apply {
+            this.action = action
         }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    }
+
+    fun enableEnterButton(context: Context) {
+        sendAction(context, ACTION_ENABLE_ENTER)
     }
 
     fun disableEnterButton(context: Context) {
-        Intent().also {
-            it.action = ACTION_DISABLE_ENTER
-            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
-        }
+        sendAction(context, ACTION_DISABLE_ENTER)
     }
 
-    fun enableSpenBinding(context: Context) {
-        Intent().also {
-            it.action = ACTION_ENABLE_SPEN
-            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
-        }
+    fun enableSPenBinding(context: Context) {
+        sendAction(context, ACTION_ENABLE_SPEN)
     }
 
-    fun disableSpenBinding(context: Context) {
-        Intent().also {
-            it.action = ACTION_DISABLE_SPEN
-            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
-        }
+    fun disableSPenBinding(context: Context) {
+        sendAction(context, ACTION_DISABLE_SPEN)
     }
 
     val filter = IntentFilter().apply {
