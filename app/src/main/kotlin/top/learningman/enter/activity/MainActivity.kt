@@ -82,6 +82,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+        Toast.makeText(this, "App runs in background.", Toast.LENGTH_SHORT).show()
+    }
+
     private val sPenCallback = object :
         SpenRemote.ConnectionResultCallback {
         override fun onSuccess(manager: SpenUnitManager) {
