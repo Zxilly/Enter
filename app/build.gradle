@@ -7,12 +7,12 @@ def currentVersionCode = (new Date()).getTime() / 1000
 def currentVersionName = new Date().toString()
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "top.learningman.enter"
         minSdk 30
-        targetSdk 32
+        targetSdk 33
         versionCode = currentVersionCode
         versionName = currentVersionName
     }
@@ -60,20 +60,21 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'top.learningman.enter'
 }
 
 dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation project(path: ':setupwizardlib')
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.viewpager2:viewpager2:1.1.0-beta01"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
-    def appCenterSdkVersion = '4.4.3'
+    def appCenterSdkVersion = '5.0.0'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
